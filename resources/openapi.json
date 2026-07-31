@@ -1,0 +1,258 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "API REST de Motocicletas",
+    "version": "1.0.0",
+    "description": "CRUD de motocicletas protegido por JWT. Gerentes possuem acesso completo e usuários comuns possuem acesso somente à consulta."
+  },
+  "servers": [{ "url": "http://localhost:3000", "description": "Ambiente local" }],
+  "tags": [
+    { "name": "Autenticação" },
+    { "name": "Motocicletas" },
+    { "name": "Infraestrutura" }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": ["Infraestrutura"],
+        "summary": "Verifica a saúde da API",
+        "responses": {
+          "200": {
+            "description": "API disponível",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/HealthResponse" } } }
+          },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": ["Autenticação"],
+        "summary": "Autentica um usuário",
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LoginRequest" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "Login realizado",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LoginResponse" } } }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/motorcycles": {
+      "get": {
+        "tags": ["Motocicletas"],
+        "summary": "Lista todas as motocicletas",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Lista de motocicletas",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/MotorcycleListResponse" } } }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      },
+      "post": {
+        "tags": ["Motocicletas"],
+        "summary": "Registra uma motocicleta",
+        "description": "Disponível somente para o perfil gerente.",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/MotorcycleInput" } } }
+        },
+        "responses": {
+          "201": {
+            "description": "Motocicleta registrada",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/MotorcycleResponse" } } }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    },
+    "/api/motorcycles/{id}": {
+      "parameters": [{ "$ref": "#/components/parameters/MotorcycleId" }],
+      "get": {
+        "tags": ["Motocicletas"],
+        "summary": "Busca uma motocicleta pelo ID",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Motocicleta encontrada",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/MotorcycleResponse" } } }
+          },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      },
+      "put": {
+        "tags": ["Motocicletas"],
+        "summary": "Edita uma motocicleta",
+        "description": "Disponível somente para o perfil gerente. Aceita um ou mais campos editáveis.",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/MotorcycleUpdate" } } }
+        },
+        "responses": {
+          "200": {
+            "description": "Motocicleta editada",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/MotorcycleResponse" } } }
+          },
+          "400": { "$ref": "#/components/responses/BadRequest" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      },
+      "delete": {
+        "tags": ["Motocicletas"],
+        "summary": "Remove uma motocicleta",
+        "description": "Disponível somente para o perfil gerente.",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "204": { "description": "Motocicleta removida; resposta sem corpo" },
+          "401": { "$ref": "#/components/responses/Unauthorized" },
+          "403": { "$ref": "#/components/responses/Forbidden" },
+          "404": { "$ref": "#/components/responses/NotFound" },
+          "500": { "$ref": "#/components/responses/InternalServerError" }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": { "type": "http", "scheme": "bearer", "bearerFormat": "JWT" }
+    },
+    "parameters": {
+      "MotorcycleId": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "UUID da motocicleta",
+        "schema": { "type": "string", "format": "uuid" }
+      }
+    },
+    "schemas": {
+      "LoginRequest": {
+        "type": "object",
+        "required": ["username", "password"],
+        "properties": {
+          "username": { "type": "string", "example": "gerente" },
+          "password": { "type": "string", "format": "password", "example": "gerente123" }
+        }
+      },
+      "User": {
+        "type": "object",
+        "required": ["username", "role"],
+        "properties": {
+          "username": { "type": "string", "example": "gerente" },
+          "role": { "type": "string", "enum": ["manager", "user"], "example": "manager" }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "required": ["token", "user"],
+        "properties": {
+          "token": { "type": "string", "description": "Token JWT", "example": "eyJhbGciOiJIUzI1NiJ9..." },
+          "user": { "$ref": "#/components/schemas/User" }
+        }
+      },
+      "MotorcycleInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["brand", "model", "year", "color", "engineCapacityCc"],
+        "properties": {
+          "brand": { "type": "string", "minLength": 1, "example": "Honda" },
+          "model": { "type": "string", "minLength": 1, "example": "CB 500F" },
+          "year": { "type": "integer", "minimum": 1885, "example": 2025 },
+          "color": { "type": "string", "minLength": 1, "example": "Vermelha" },
+          "engineCapacityCc": { "type": "integer", "minimum": 1, "example": 471 }
+        }
+      },
+      "MotorcycleUpdate": {
+        "type": "object",
+        "additionalProperties": false,
+        "minProperties": 1,
+        "properties": {
+          "brand": { "type": "string", "minLength": 1, "example": "Honda" },
+          "model": { "type": "string", "minLength": 1, "example": "CB 500F" },
+          "year": { "type": "integer", "minimum": 1885, "example": 2026 },
+          "color": { "type": "string", "minLength": 1, "example": "Preta" },
+          "engineCapacityCc": { "type": "integer", "minimum": 1, "example": 471 }
+        }
+      },
+      "Motorcycle": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "brand", "model", "year", "color", "engineCapacityCc", "createdAt", "updatedAt"],
+        "properties": {
+          "id": { "type": "string", "format": "uuid", "example": "d248b0dc-0174-4ec5-bf3e-e9d0b2187302" },
+          "brand": { "type": "string", "example": "Honda" },
+          "model": { "type": "string", "example": "CB 500F" },
+          "year": { "type": "integer", "example": 2025 },
+          "color": { "type": "string", "example": "Vermelha" },
+          "engineCapacityCc": { "type": "integer", "example": 471 },
+          "createdAt": { "type": "string", "format": "date-time", "example": "2026-07-30T18:00:00.000Z" },
+          "updatedAt": { "type": "string", "format": "date-time", "example": "2026-07-30T18:00:00.000Z" }
+        }
+      },
+      "MotorcycleResponse": {
+        "type": "object",
+        "required": ["data"],
+        "properties": { "data": { "$ref": "#/components/schemas/Motorcycle" } }
+      },
+      "MotorcycleListResponse": {
+        "type": "object",
+        "required": ["data", "count"],
+        "properties": {
+          "data": { "type": "array", "items": { "$ref": "#/components/schemas/Motorcycle" } },
+          "count": { "type": "integer", "minimum": 0, "example": 1 }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": ["error"],
+        "properties": { "error": { "type": "string", "example": "Mensagem descritiva do erro." } }
+      },
+      "HealthResponse": {
+        "type": "object",
+        "required": ["status"],
+        "properties": { "status": { "type": "string", "enum": ["ok"], "example": "ok" } }
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Requisição inválida",
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+      },
+      "Unauthorized": {
+        "description": "Token ausente, inválido ou credenciais inválidas",
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+      },
+      "Forbidden": {
+        "description": "Perfil sem permissão",
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+      },
+      "NotFound": {
+        "description": "Motocicleta não encontrada",
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+      },
+      "InternalServerError": {
+        "description": "Erro interno do servidor",
+        "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+      }
+    }
+  }
+}
