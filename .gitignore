@@ -146,3 +146,6 @@ vite.config.ts.timestamp-*
 # testwares
 testware/*
 .tmp_docs_cases/*
+
+# testes automaticos criados por IA
+test/api.test.js
