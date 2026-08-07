@@ -149,3 +149,6 @@ testware/*
 
 # testes automaticos criados por IA
 test/api.test.js
+
+# relatórios dos testes com mochawesome
+mochawesome-report/
