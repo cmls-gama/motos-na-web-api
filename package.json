@@ -12,7 +12,13 @@
     "type": "git",
     "url": "git+https://github.com/cmls-gama/ppp-mentoria-2026.git"
   },
-  "keywords": ["nodejs", "express", "rest-api", "jwt", "swagger"],
+  "keywords": [
+    "nodejs",
+    "express",
+    "rest-api",
+    "jwt",
+    "swagger"
+  ],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
@@ -27,7 +33,9 @@
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
-    "supertest": "^7.0.0"
+    "chai": "^6.2.2",
+    "mocha": "^11.8.0",
+    "supertest": "^7.2.2"
   },
   "engines": {
     "node": ">=18"
