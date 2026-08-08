@@ -7,7 +7,7 @@ const app = require('../src/app');
 const motorcycleService = require('../src/services/motorcycleService');
 
 
-describe ('Post Motocycles', ()=> {
+describe ('Post Motorcycles', ()=> {
     let tokenGerente;
     let tokenUsuario;
     const tokenInvalido = 'testes';
