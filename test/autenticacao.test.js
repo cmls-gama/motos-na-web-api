@@ -1,6 +1,5 @@
 const request = require('supertest');
 const {expect} = require('chai');
-//const {describe, it} = require('node:test');
 require('dotenv').config();
 const postAuthGerente = require ('./fixtures/postAuthGerente.json');
 const postAuthUsuario = require ('./fixtures/postAuthUsuario.json');
