@@ -7,10 +7,10 @@ const app = require('../src/app');
 const motorcycleService = require('../src/services/motorcycleService');
 
 
-describe ('Crud de Motocicletas', ()=> {
+describe ('Post Motocycles', ()=> {
     let tokenGerente;
     let tokenUsuario;
-    let tokenInvalido = 'testes';
+    const tokenInvalido = 'testes';
 
     before(async()=>{
         tokenGerente = await obterTokenGerente();
@@ -21,20 +21,34 @@ describe ('Crud de Motocicletas', ()=> {
 
         it('Deve retornar 201 ao utilizar o token de gerente', async()=>{
             const bodyMotorcycles = {...postMotorcycles}
+            let idMoto;
 
+        try{
             const resposta = await request(process.env.BASE_URL)
                 .post('/api/motorcycles')
                 .set('Content-Type', 'application/json')
                 .set('Authorization', `Bearer ${tokenGerente}`)
                 .send(bodyMotorcycles)
-
+            
+                idMoto = resposta.body.data.id;
 
             //Validações com o CHAI
             expect(resposta.status).to.be.equal(201);
             expect(resposta.body.data.id).to.be.a('string');
             expect(resposta.body.data.brand).to.be.equal('Honda');
             expect(resposta.body.data).to.have.property('createdAt');
-        })
+        } finally {
+            if (idMoto) {
+                const limpeza = await request(process.env.BASE_URL)
+                    .delete(`/api/motorcycles/${idMoto}`)
+                    .set('Authorization', `Bearer ${tokenGerente}`);
+
+                if (limpeza.status !== 204) {
+                    throw new Error(`Falha na limpeza. Status: ${limpeza.status}`);
+                }
+            }
+        }
+    })
 
         it('Deve retornar 400 ao realizar uma requisição inválida', async()=>{
             const bodyMotorcycles = {...postMotorcycles}
@@ -60,7 +74,7 @@ describe ('Crud de Motocicletas', ()=> {
 
             const resposta = await request(process.env.BASE_URL)
                 .post('/api/motorcycles')
-                .set('Content-Type', 'appliation/json')
+                .set('Content-Type', 'application/json')
                 .set('Authorization', `Bearer ${tokenInvalido}`)
                 .send(bodyMotorcycles)
 
