@@ -152,3 +152,6 @@ test/api.test.js
 
 # relatórios dos testes com mochawesome
 mochawesome-report/
+
+# relatório de testes de performance
+html-report.html
