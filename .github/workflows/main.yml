@@ -1,33 +1,80 @@
 name: Motos-na-Web-API-CI
 
-#[script de pipeline] YAML
-
-# [gatilhos] (manual, agendada, quando houver mudanças, etc.)
 on:
   workflow_dispatch:
 
-jobs:
-  tests:
-    # [config do sistema operacional] (mac/windows/linux/etc)
-    runs-on: ubuntu-latest 
+  pull_request:
+    branches:
+      - main
 
-    # [variaveis] (de ambiente, chaves de acesso)
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: api-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  api-tests:
+    name: Testes automatizados da API
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
     env:
-      API_BASE_URL: 'http://localhost:3000'
-      PORT: 4000  # URL base da API REST Banco API ou do Mock Server
+      BASE_URL: http://localhost:3000
+      PORT: '3000'
+      JWT_SECRET: ci-only-secret-not-for-production
+      JWT_EXPIRES_IN: 1h
+      MANAGER_USERNAME: gerente
+      MANAGER_PASSWORD: gerente123
+      USER_USERNAME: usuario
+      USER_PASSWORD: usuario123
 
     steps:
-    # [projetos] (aplicacoes FE/BE, apps, projetos de testes, etc)
-      - name: Clone do projeto
-        uses: actions/checkout@v6.1.0
+      - name: Clonar o projeto
+        uses: actions/checkout@v6
 
-    # [dependencias do projeto] (node/npm, java/maven, python/pip)
-      - name: Instalando deps do proejto
-        run: npm install
+      - name: Configurar Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: npm
 
-    # [acoes para verificar regras/políticas] (cobertura de código, formatacao, testes ui/e2e/unit/etc.)
-      - name: Iniciando servidor de APIs
-        run: npm start
+      - name: Instalar dependências
+        run: npm ci
 
-      - name: Executando os testes e2e do projeto Motos na Web API
+      - name: Iniciar a API e aguardar disponibilidade
+        shell: bash
+        run: |
+          npm start > server.log 2>&1 &
+
+          for tentativa in {1..30}; do
+            if curl --fail --silent "$BASE_URL/health" > /dev/null; then
+              echo "API disponível em $BASE_URL"
+              exit 0
+            fi
+
+            sleep 1
+          done
+
+          echo "A API não ficou disponível no tempo esperado."
+          cat server.log
+          exit 1
+
+      - name: Executar os testes da API
         run: npm test
+
+      - name: Publicar relatório dos testes
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: relatorio-mochawesome
+          path: |
+            mochawesome-report/
+            server.log
+          if-no-files-found: warn
+          retention-days: 7
