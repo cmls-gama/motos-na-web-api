@@ -1,5 +1,8 @@
 name: Motos-na-Web-API-CI
 
+#[script de pipeline] YAML
+
+# [gatilhos] (manual, agendada, quando houver mudanças, etc.)
 on:
   workflow_dispatch:
 
@@ -20,10 +23,11 @@ concurrency:
 
 jobs:
   api-tests:
+  # [config do sistema operacional] (mac/windows/linux/etc)
     name: Testes automatizados da API
     runs-on: ubuntu-latest
     timeout-minutes: 10
-
+  # [variaveis] (de ambiente, chaves de acesso)
     env:
       BASE_URL: http://localhost:3000
       PORT: '3000'
@@ -35,9 +39,10 @@ jobs:
       USER_PASSWORD: usuario123
 
     steps:
+    # [projetos] (aplicacoes FE/BE, apps, projetos de testes, etc)
       - name: Clonar o projeto
         uses: actions/checkout@v6
-
+    # [dependencias do projeto] (node/npm, java/maven, python/pip)
       - name: Configurar Node.js
         uses: actions/setup-node@v6
         with:
@@ -46,7 +51,7 @@ jobs:
 
       - name: Instalar dependências
         run: npm ci
-
+     # [acoes para verificar regras/políticas] (cobertura de código, formatacao, testes ui/e2e/unit/etc.)
       - name: Iniciar a API e aguardar disponibilidade
         shell: bash
         run: |
