@@ -1,0 +1,35 @@
+name: Motos-na-Web-API-CI
+
+#[script de pipeline] YAML
+
+# [gatilhos] (manual, agendada, quando houver mudanças, etc.)
+on:
+  workflow_dispatch:
+
+jobs:
+  tests:
+    # [config do sistema operacional] (mac/windows/linux/etc)
+    runs-on: ubuntu-latest 
+
+    # [variaveis] (de ambiente, chaves de acesso)
+    env:
+      API_BASE_URL: 'http://localhost:3000'
+      PORT: 4000  # URL base da API REST Banco API ou do Mock Server
+
+    steps:
+    # [projetos] (aplicacoes FE/BE, apps, projetos de testes, etc)
+      - name: Clone do projeto
+        uses: actions/checkout@v6.1.0
+
+    # [dependencias do projeto] (node/npm, java/maven, python/pip)
+      - name: Instalando deps do proejto
+        run: npm install
+
+    # [acoes para verificar regras/políticas] (cobertura de código, formatacao, testes ui/e2e/unit/etc.)
+      - name: Iniciando servidor de APIs
+        run: npm start
+
+      - name: Executando os testes e2e do projeto Motos na Web API
+        run: npm test
+
+    
