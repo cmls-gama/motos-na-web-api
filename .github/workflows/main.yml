@@ -31,5 +31,3 @@ jobs:
 
       - name: Executando os testes e2e do projeto Motos na Web API
         run: npm test
-
-    
