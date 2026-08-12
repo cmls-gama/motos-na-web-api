@@ -15,8 +15,6 @@ API de portfólio construída para praticar desenvolvimento, documentação e di
 
 </div>
 
-testes
-
 ## Sobre o projeto
 
 O projeto implementa um CRUD de motocicletas protegido por autenticação JWT e autorização por perfil. Além da API, o repositório reúne contrato OpenAPI, testes automatizados de integração, testes de performance com k6 e um workflow de integração contínua com publicação de evidências.
