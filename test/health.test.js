@@ -8,7 +8,7 @@ describe('Health Check', () => {
             const resposta = await request(process.env.BASE_URL)
                 .get('/health');
 
-            expect(resposta.status).to.equal(201);
+            expect(resposta.status).to.equal(200);
             expect(resposta.headers['content-type']).to.include('application/json');
             expect(resposta.body).to.deep.equal({ status: 'ok' });
         });
