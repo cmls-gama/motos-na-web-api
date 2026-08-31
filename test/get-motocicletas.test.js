@@ -83,7 +83,7 @@ describe('Get Motorcycles', () => {
     })
     describe('GET/api/motorcycles/{id}', () => {
 
-        it.only('Deve retornar a moto ID filtrada e deve retornar status code 200', async () => {
+        it('Deve retornar a moto ID filtrada e deve retornar status code 200', async () => {
             const motocicletaCriada = await criarMoto(tokenGerente);
             const idMoto = motocicletaCriada.id;
 
@@ -118,9 +118,7 @@ describe('Get Motorcycles', () => {
                 expect(resposta.body.data.brand).to.be.a('string');
                 expect(resposta.body.data).to.have.property('createdAt');
             } finally {
-                await request(process.env.BASE_URL)
-                    .delete(`/api/motorcycles/${idMoto}`)
-                    .set('Authorization', `Bearer ${tokenGerente}`);
+                await excluirMoto(idMoto, tokenGerente);
             }
 
         })
@@ -138,9 +136,7 @@ describe('Get Motorcycles', () => {
                 expect(resposta.status).to.equal(401);
                 expect(resposta.body.error).to.include('Token inválido');
             } finally {
-                await request(process.env.BASE_URL)
-                    .delete(`/api/motorcycles/${idMoto}`)
-                    .set('Authorization', `Bearer ${tokenGerente}`);
+                await excluirMoto(idMoto, tokenGerente);
             }
 
         })
