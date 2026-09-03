@@ -3,6 +3,7 @@ const { expect } = require('chai');
 require('dotenv').config();
 const putMotorcycles = require('./fixtures/putMotorcycles.json');
 const { obterTokenGerente, obterTokenUsuario } = require('./helpers/autenticacao');
+const { excluirMoto } = require('./helpers/excluirMoto');
 const { criarMoto } = require('./helpers/criaMoto');
 
 describe('Put Motorcycles', () => {
@@ -38,16 +39,7 @@ describe('Put Motorcycles', () => {
                 expect(resposta.body.data.engineCapacityCc).to.equal(bodyMotorcycles.engineCapacityCc);
 
             } finally {
-                const limpeza = await request(process.env.BASE_URL)
-                    .delete(`/api/motorcycles/${idMoto}`)
-                    .set('Authorization', `Bearer ${tokenGerente}`);
-                //verifica se a exclusão foi feita com sucesso.
-                if (limpeza.status !== 204) {
-                    throw new Error(
-                        `Falha ao limpar motocicleta ${idMoto}. `
-                        + `Status: ${limpeza.status}`
-                    );
-                }
+                await excluirMoto(idMoto, tokenGerente);
             }
         });
         it('Deve retornar 400 ao tentar atualizar sem informar campos', async () => {
@@ -66,17 +58,8 @@ describe('Put Motorcycles', () => {
                     'error',
                     'Informe ao menos um campo para atualização.'
                 );
-            } finally {
-                const limpeza = await request(process.env.BASE_URL)
-                    .delete(`/api/motorcycles/${idMoto}`)
-                    .set('Authorization', `Bearer ${tokenGerente}`);
-                //verifica se a exclusão foi feita com sucesso.
-                if (limpeza.status !== 204) {
-                    throw new Error(
-                        `Falha ao limpar motocicleta ${idMoto}. `
-                        + `Status: ${limpeza.status}`
-                    );
-                }
+            }finally {
+                await excluirMoto(idMoto, tokenGerente);
             }
         });
 
@@ -98,16 +81,7 @@ describe('Put Motorcycles', () => {
                     'Token inválido ou expirado.'
                 );
             } finally {
-                const limpeza = await request(process.env.BASE_URL)
-                    .delete(`/api/motorcycles/${idMoto}`)
-                    .set('Authorization', `Bearer ${tokenGerente}`);
-
-                if (limpeza.status !== 204) {
-                    throw new Error(
-                        `Falha ao limpar motocicleta ${idMoto}. `
-                        + `Status: ${limpeza.status}`
-                    );
-                }
+                await excluirMoto(idMoto, tokenGerente);
             }
         });
 
@@ -128,16 +102,7 @@ describe('Put Motorcycles', () => {
                 // Verifica se contém determinado trecho
                 expect(resposta.body.error).to.include('Você não possui permissão');
             } finally {
-                const limpeza = await request(process.env.BASE_URL)
-                    .delete(`/api/motorcycles/${idMoto}`)
-                    .set('Authorization', `Bearer ${tokenGerente}`);
-                //verifica se a exclusão foi feita com sucesso.
-                if (limpeza.status !== 204) {
-                    throw new Error(
-                        `Falha ao limpar motocicleta ${idMoto}. `
-                        + `Status: ${limpeza.status}`
-                    );
-                }
+                await excluirMoto(idMoto, tokenGerente);
             }
         })
         it('Deve retornar 404 ao tentar atualizar uma motocicleta não encontrada', async () => {
