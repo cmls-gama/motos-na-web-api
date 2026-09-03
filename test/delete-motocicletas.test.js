@@ -3,6 +3,7 @@ const { expect } = require('chai');
 require('dotenv').config();
 const { obterTokenGerente, obterTokenUsuario } = require('./helpers/autenticacao');
 const { criarMoto } = require('./helpers/criaMoto');
+const { excluirMoto } = require('./helpers/excluirMoto');
 const app = require('../src/app');
 const motorcycleService = require('../src/services/motorcycleService');
 
@@ -49,17 +50,7 @@ describe('Delete Motorcycles', () => {
                 expect(resposta.body).to.deep.equal({error:'Token inválido ou expirado.'});
 
             } finally {
-                //Deleta o registro criado para não sujar a memória
-                const limpeza = await request(process.env.BASE_URL)
-                    .delete(`/api/motorcycles/${idMoto}`)
-                    .set('Authorization', `Bearer ${tokenGerente}`);
-                //verifica se a exclusão foi feita com sucesso.
-                if (limpeza.status !== 204) {
-                    throw new Error(
-                        `Falha ao limpar motocicleta ${idMoto}. `
-                        + `Status: ${limpeza.status}`
-                    );
-                }
+                await excluirMoto(idMoto, tokenGerente);
             }
 
         })
@@ -79,17 +70,7 @@ describe('Delete Motorcycles', () => {
                 expect(resposta.body).to.deep.equal({error: 'Você não possui permissão para esta operação.'});
 
             } finally {
-                //Deleta o registro criado para não sujar a memória
-                const limpeza = await request(process.env.BASE_URL)
-                    .delete(`/api/motorcycles/${idMoto}`)
-                    .set('Authorization', `Bearer ${tokenGerente}`);
-                //verifica se a exclusão foi feita com sucesso.
-                if (limpeza.status !== 204) {
-                    throw new Error(
-                        `Falha ao limpar motocicleta ${idMoto}. `
-                        + `Status: ${limpeza.status}`
-                    );
-                }
+                await excluirMoto(idMoto, tokenGerente);
             }
 
         })

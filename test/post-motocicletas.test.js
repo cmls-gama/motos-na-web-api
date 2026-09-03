@@ -4,6 +4,7 @@ require('dotenv').config();
 const postMotorcycles = require ('./fixtures/postMotorcycles.json');
 const { obterTokenGerente, obterTokenUsuario } = require('./helpers/autenticacao');
 const app = require('../src/app');
+const { excluirMoto } = require('./helpers/excluirMoto');
 const motorcycleService = require('../src/services/motorcycleService');
 
 
@@ -38,16 +39,8 @@ describe ('Post Motorcycles', ()=> {
             expect(resposta.body.data.brand).to.be.equal('Honda');
             expect(resposta.body.data).to.have.property('createdAt');
         } finally {
-            if (idMoto) {
-                const limpeza = await request(process.env.BASE_URL)
-                    .delete(`/api/motorcycles/${idMoto}`)
-                    .set('Authorization', `Bearer ${tokenGerente}`);
-
-                if (limpeza.status !== 204) {
-                    throw new Error(`Falha na limpeza. Status: ${limpeza.status}`);
-                }
+                await excluirMoto(idMoto, tokenGerente);
             }
-        }
     })
 
         it('Deve retornar 400 ao realizar uma requisição inválida', async()=>{
