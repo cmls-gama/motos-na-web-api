@@ -5,7 +5,7 @@ const postAuthGerente = require('../fixtures/postAuthGerente.json');
 
 const excluirMoto = async (idMoto, tokenGerente) => {
     const resposta = await request(process.env.BASE_URL)
-        .delete(`/api/motorcycles/${idMoto}`)
+        .delete(`/api/v1/motorcycles/${idMoto}`)
         .set('Authorization', `Bearer ${tokenGerente}`);
 
     if (resposta.status !== 204){

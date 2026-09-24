@@ -18,14 +18,14 @@ describe('Delete Motorcycles', () => {
         tokenUsuario = await obterTokenUsuario();
     })
 
-    describe('DELETE/api/motorcycles', () => {
+    describe('DELETE/api/v1/motorcycles', () => {
 
         it('Deve retornar 204 ao utilizar o token de gerente para deletar', async () => {
             const motocicletaCriada = await criarMoto(tokenGerente);
             const idMoto = motocicletaCriada.id;
 
             const resposta = await request(process.env.BASE_URL)
-                .delete(`/api/motorcycles/${idMoto}`)
+                .delete(`/api/v1/motorcycles/${idMoto}`)
                 .set('Content-Type', 'application/json')
                 .set('Authorization', `Bearer ${tokenGerente}`)
 
@@ -41,7 +41,7 @@ describe('Delete Motorcycles', () => {
 
             try {
                 const resposta = await request(process.env.BASE_URL)
-                    .delete(`/api/motorcycles/${idMoto}`)
+                    .delete(`/api/v1/motorcycles/${idMoto}`)
                     .set('Content-Type', 'application/json')
                     .set('Authorization', `Bearer ${tokenInvalido}`)
 
@@ -61,7 +61,7 @@ describe('Delete Motorcycles', () => {
 
             try {
                 const resposta = await request(process.env.BASE_URL)
-                    .delete(`/api/motorcycles/${idMoto}`)
+                    .delete(`/api/v1/motorcycles/${idMoto}`)
                     .set('Content-Type', 'application/json')
                     .set('Authorization', `Bearer ${tokenUsuario}`)
 
@@ -77,7 +77,7 @@ describe('Delete Motorcycles', () => {
         it('Deve retornar 404 ao utilizar o token de gerente para deletar um id moto inválido', async () => {
 
             const resposta = await request(process.env.BASE_URL)
-                .delete(`/api/motorcycles/${idMotoInvalido}`)
+                    .delete(`/api/v1/motorcycles/${idMotoInvalido}`)
                 .set('Authorization', `Bearer ${tokenGerente}`);
 
             expect(resposta.status).to.equal(404);
@@ -94,7 +94,7 @@ describe('Delete Motorcycles', () => {
 
             try {
                 const resposta = await request(app)
-                    .delete('/api/motorcycles/id-simulado')
+                    .delete('/api/v1/motorcycles/id-simulado')
                     .set('Authorization', `Bearer ${tokenGerente}`);
 
                 expect(resposta.status).to.equal(500);

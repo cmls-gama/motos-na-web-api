@@ -62,12 +62,12 @@ As responsabilidades são separadas entre rotas, controllers, serviços, middlew
 | Método | Endpoint | Acesso | Finalidade |
 | --- | --- | --- | --- |
 | `GET` | `/health` | Público | Verificar disponibilidade da API |
-| `POST` | `/api/auth/login` | Público | Autenticar e emitir o JWT |
-| `GET` | `/api/motorcycles` | `manager` ou `user` | Listar motocicletas |
-| `GET` | `/api/motorcycles/:id` | `manager` ou `user` | Consultar uma motocicleta |
-| `POST` | `/api/motorcycles` | `manager` | Cadastrar uma motocicleta |
-| `PUT` | `/api/motorcycles/:id` | `manager` | Atualizar uma motocicleta |
-| `DELETE` | `/api/motorcycles/:id` | `manager` | Remover uma motocicleta |
+| `POST` | `/api/v1/auth/login` | Público | Autenticar e emitir o JWT |
+| `GET` | `/api/v1/motorcycles` | `manager` ou `user` | Listar motocicletas |
+| `GET` | `/api/v1/motorcycles/:id` | `manager` ou `user` | Consultar uma motocicleta |
+| `POST` | `/api/v1/motorcycles` | `manager` | Cadastrar uma motocicleta |
+| `PUT` | `/api/v1/motorcycles/:id` | `manager` | Atualizar uma motocicleta |
+| `DELETE` | `/api/v1/motorcycles/:id` | `manager` | Remover uma motocicleta |
 | `GET` | `/api-docs` | Público | Abrir o Swagger UI |
 | `GET` | `/api-docs.json` | Público | Consultar o contrato OpenAPI |
 
@@ -193,7 +193,7 @@ npm run test:performance:health
 k6 run performance/k6/post-motorcycles.test.js
 ```
 
-No cenário de cadastro, cada iteração autentica o gerente, envia um `POST /api/motorcycles` e verifica o status `201`, o token e o ID criado.
+No cenário de cadastro, cada iteração autentica o gerente, envia um `POST /api/v1/motorcycles` e verifica o status `201`, o token e o ID criado.
 
 > O workflow atual não executa os scripts k6; os testes de performance são iniciados separadamente pelos comandos acima.
 
@@ -203,7 +203,7 @@ Os artefatos analisados na pasta local `testware` registram:
 
 - plano de testes da API REST, versão 1.0;
 - 25 casos manuais para autenticação, listagem e cadastro, estruturados com referência à ISO 29119-3 e à heurística VADER;
-- três relatórios de sessão exploratória SBTM para `GET`, `PUT` e `DELETE /api/motorcycles/:id`, com 30 minutos cada;
+- três relatórios de sessão exploratória SBTM para `GET`, `PUT` e `DELETE /api/v1/motorcycles/:id`, com 30 minutos cada;
 - registro de achados nos [issues do repositório](https://github.com/cmls-gama/motos-na-web-api/issues).
 
 O conteúdo consolidado e a rastreabilidade desses artefatos estão na [Wiki](https://github.com/cmls-gama/motos-na-web-api/wiki/Motos-na-Web-%E2%80%90-APIs).

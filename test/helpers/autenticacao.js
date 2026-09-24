@@ -6,7 +6,7 @@ const postAuthUsuario = require('../fixtures/postAuthUsuario.json');
 
 const autenticar = async (credenciais, perfil) => {
   const resposta = await request(process.env.BASE_URL)
-    .post('/api/auth/login')
+    .post('/api/v1/auth/login')
     .set('Content-Type', 'application/json')
     .send(credenciais);
 

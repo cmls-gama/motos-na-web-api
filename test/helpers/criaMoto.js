@@ -5,7 +5,7 @@ const postMotorcycles = require('../fixtures/postMotorcycles.json');
 
 const criarMoto = async (token, dados = postMotorcycles) => {
     const resposta = await request(process.env.BASE_URL)
-        .post('/api/motorcycles')
+        .post('/api/v1/motorcycles')
         .set('Content-Type', 'application/json')
         .set('Authorization', `Bearer ${token}`)
         .send({ ...dados });

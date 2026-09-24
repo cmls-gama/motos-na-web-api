@@ -18,7 +18,7 @@ describe ('Post Motorcycles', ()=> {
         tokenUsuario = await obterTokenUsuario();
     })
 
-    describe ('POST/api/motorcycles', ()=>{
+    describe ('POST/api/v1/motorcycles', ()=>{
 
         it('Deve retornar 201 ao utilizar o token de gerente', async()=>{
             const bodyMotorcycles = {...postMotorcycles}
@@ -26,7 +26,7 @@ describe ('Post Motorcycles', ()=> {
 
         try{
             const resposta = await request(process.env.BASE_URL)
-                .post('/api/motorcycles')
+                .post('/api/v1/motorcycles')
                 .set('Content-Type', 'application/json')
                 .set('Authorization', `Bearer ${tokenGerente}`)
                 .send(bodyMotorcycles)
@@ -50,7 +50,7 @@ describe ('Post Motorcycles', ()=> {
             delete bodyMotorcycles.brand;
 
             const resposta = await request(process.env.BASE_URL)
-                .post('/api/motorcycles')
+                .post('/api/v1/motorcycles')
                 .set('Content-Type', 'application/json')
                 .set('Authorization', `Bearer ${tokenGerente}`)
                 .send(bodyMotorcycles)
@@ -66,7 +66,7 @@ describe ('Post Motorcycles', ()=> {
             const bodyMotorcycles = {...postMotorcycles}
 
             const resposta = await request(process.env.BASE_URL)
-                .post('/api/motorcycles')
+                .post('/api/v1/motorcycles')
                 .set('Content-Type', 'application/json')
                 .set('Authorization', `Bearer ${tokenInvalido}`)
                 .send(bodyMotorcycles)
@@ -81,7 +81,7 @@ describe ('Post Motorcycles', ()=> {
             const bodyMotorcycles = {...postMotorcycles}
 
             const resposta = await request(process.env.BASE_URL)
-                .post('/api/motorcycles')
+                .post('/api/v1/motorcycles')
                 .set('Content-Type', 'application/json')
                 .set('Authorization', `Bearer ${tokenUsuario}`)
                 .send(bodyMotorcycles)
@@ -103,7 +103,7 @@ describe ('Post Motorcycles', ()=> {
 
             try {
                 const resposta = await request(app)
-                    .post('/api/motorcycles')
+                    .post('/api/v1/motorcycles')
                     .set('Content-Type', 'application/json')
                     .set('Authorization', `Bearer ${tokenGerente}`)
                     .send(bodyMotorcycles);
