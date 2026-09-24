@@ -17,7 +17,7 @@ describe('Put Motorcycles', () => {
         tokenUsuario = await obterTokenUsuario();
     })
 
-    describe('PUT/api/motorcycles', () => {
+    describe('PUT/api/v1/motorcycles', () => {
         it('Deve retornar 200 ao atualizar uma motocicleta como gerente', async () => {
             const motocicletaCriada = await criarMoto(tokenGerente);
             const idMoto = motocicletaCriada.id;
@@ -25,7 +25,7 @@ describe('Put Motorcycles', () => {
 
             try {
                 const resposta = await request(process.env.BASE_URL)
-                    .put(`/api/motorcycles/${idMoto}`)
+                    .put(`/api/v1/motorcycles/${idMoto}`)
                     .set('Content-Type', 'application/json')
                     .set('Authorization', `Bearer ${tokenGerente}`)
                     .send(bodyMotorcycles);
@@ -48,7 +48,7 @@ describe('Put Motorcycles', () => {
 
             try {
                 const resposta = await request(process.env.BASE_URL)
-                    .put(`/api/motorcycles/${idMoto}`)
+                    .put(`/api/v1/motorcycles/${idMoto}`)
                     .set('Content-Type', 'application/json')
                     .set('Authorization', `Bearer ${tokenGerente}`)
                     .send({});
@@ -70,7 +70,7 @@ describe('Put Motorcycles', () => {
 
             try {
                 const resposta = await request(process.env.BASE_URL)
-                    .put(`/api/motorcycles/${idMoto}`)
+                    .put(`/api/v1/motorcycles/${idMoto}`)
                     .set('Content-Type', 'application/json')
                     .set('Authorization', `Bearer ${tokenInvalido}`)
                     .send(bodyMotorcycles);
@@ -92,7 +92,7 @@ describe('Put Motorcycles', () => {
 
             try {
                 const resposta = await request(process.env.BASE_URL)
-                    .put(`/api/motorcycles/${idMoto}`)
+                    .put(`/api/v1/motorcycles/${idMoto}`)
                     .set('Content-Type', 'application/json')
                     .set('Authorization', `Bearer ${tokenUsuario}`)
                     .send(bodyMotorcycles)
@@ -109,7 +109,7 @@ describe('Put Motorcycles', () => {
             const bodyMotorcycles = { ...putMotorcycles };
 
             const resposta = await request(process.env.BASE_URL)
-                .put(`/api/motorcycles/${idMotoInvalido}`)
+                .put(`/api/v1/motorcycles/${idMotoInvalido}`)
                 .set('Content-Type', 'application/json')
                 .set('Authorization', `Bearer ${tokenGerente}`)
                 .send(bodyMotorcycles);

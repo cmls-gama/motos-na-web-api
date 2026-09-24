@@ -19,11 +19,11 @@ describe('Get Motorcycles', () => {
         tokenUsuario = await obterTokenUsuario();
     })
 
-    describe('GET/api/motorcycles', () => {
+    describe('GET/api/v1/motorcycles', () => {
 
         it('Deve retornar 200 ao utilizar o token de gerente', async () => {
             const resposta = await request(process.env.BASE_URL)
-                .get('/api/motorcycles')
+                .get('/api/v1/motorcycles')
                 .set('Authorization', `Bearer ${tokenGerente}`)
 
             //Validação com o CHAI
@@ -36,7 +36,7 @@ describe('Get Motorcycles', () => {
 
         it('Deve retornar 200 ao utilizar o token de usuario', async () => {
             const resposta = await request(process.env.BASE_URL)
-                .get('/api/motorcycles')
+                .get('/api/v1/motorcycles')
                 .set('Authorization', `Bearer ${tokenUsuario}`)
 
             //Validação com o CHAI
@@ -49,7 +49,7 @@ describe('Get Motorcycles', () => {
 
         it('Deve retornar 401 ao realizar uma requisição com token inválido', async () => {
             const resposta = await request(process.env.BASE_URL)
-                .get('/api/motorcycles')
+                .get('/api/v1/motorcycles')
                 .set('Authorization', `Bearer ${tokenInvalido}`)
 
             //Validação com o CHAI
@@ -67,7 +67,7 @@ describe('Get Motorcycles', () => {
 
             try {
                 const resposta = await request(app)
-                    .get('/api/motorcycles')
+                    .get('/api/v1/motorcycles')
                     .set('Authorization', `Bearer ${tokenGerente}`);
 
                 expect(resposta.status).to.equal(500);
@@ -81,7 +81,7 @@ describe('Get Motorcycles', () => {
         })
 
     })
-    describe('GET/api/motorcycles/{id}', () => {
+    describe('GET/api/v1/motorcycles/{id}', () => {
 
         it('Deve retornar a moto ID filtrada e deve retornar status code 200', async () => {
             const motocicletaCriada = await criarMoto(tokenGerente);
@@ -89,7 +89,7 @@ describe('Get Motorcycles', () => {
 
             try {
                 const resposta = await request(process.env.BASE_URL)
-                    .get(`/api/motorcycles/${idMoto}`)
+                    .get(`/api/v1/motorcycles/${idMoto}`)
                     .set('Authorization', `Bearer ${tokenGerente}`);
 
                 //Validação com o CHAI
@@ -109,7 +109,7 @@ describe('Get Motorcycles', () => {
 
             try {
                 const resposta = await request(process.env.BASE_URL)
-                    .get(`/api/motorcycles/${idMoto}`)
+                    .get(`/api/v1/motorcycles/${idMoto}`)
                     .set('Authorization', `Bearer ${tokenUsuario}`);
 
                 //Validação com o CHAI
@@ -129,7 +129,7 @@ describe('Get Motorcycles', () => {
 
             try {
                 const resposta = await request(process.env.BASE_URL)
-                    .get(`/api/motorcycles/${idMoto}`)
+                    .get(`/api/v1/motorcycles/${idMoto}`)
                     .set('Authorization', `Bearer ${tokenInvalido}`);
 
                 //Validação com o CHAI
@@ -144,7 +144,7 @@ describe('Get Motorcycles', () => {
         it('Não deve retornar a moto ID Invalida e deve conter status code 404', async () => {
 
             const resposta = await request(process.env.BASE_URL)
-                .get(`/api/motorcycles/${idMotoInvalido}`)
+                    .get(`/api/v1/motorcycles/${idMotoInvalido}`)
                 .set('Authorization', `Bearer ${tokenGerente}`);
 
 

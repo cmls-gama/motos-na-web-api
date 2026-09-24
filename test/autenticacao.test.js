@@ -6,11 +6,11 @@ const postAuthUsuario = require ('./fixtures/postAuthUsuario.json');
 
 
 describe('Autenticação', ()=>{
-    describe ('POST /api/auth/login', ()=>{
+    describe ('POST /api/v1/auth/login', ()=>{
         it('Deve retonar 200 com token em string quando usar credenciais válidas de Gerente', async()=>{
             const bodyAuth = {...postAuthGerente}
             const resposta = await request(process.env.BASE_URL)
-                .post('/api/auth/login')
+                .post('/api/v1/auth/login')
                 .set('Content-Type','application/json')
                 .send(bodyAuth)
             
@@ -21,7 +21,7 @@ describe('Autenticação', ()=>{
         it('Deve retonar 200 com token em string quando usar credenciais válidas de Usuário', async()=>{
             const bodyAuth = {...postAuthUsuario}
             const resposta = await request(process.env.BASE_URL)
-                .post('/api/auth/login')
+                .post('/api/v1/auth/login')
                 .set('Content-Type','application/json')
                 .send(bodyAuth)
             

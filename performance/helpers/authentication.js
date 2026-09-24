@@ -4,7 +4,7 @@ import { pegarBaseURL } from '../utils/variables.js';
 const postAuthGerente = JSON.parse(open('../../test/fixtures/postAuthGerente.json'));
 
 export function obterTokenGerente (){
-    const url = pegarBaseURL() + '/api/auth/login';
+    const url = pegarBaseURL() + '/api/v1/auth/login';
 
     const payload = JSON.stringify(postAuthGerente);
 

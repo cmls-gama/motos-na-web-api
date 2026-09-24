@@ -24,7 +24,7 @@ export const options = {
 export default function () {
     const token = obterTokenGerente()
 
-    const url = pegarBaseURL() + '/api/motorcycles';
+    const url = pegarBaseURL() + '/api/v1/motorcycles';
 
     const payload = JSON.stringify({
         brand: "Honda",
